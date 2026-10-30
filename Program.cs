@@ -5,9 +5,9 @@ using System.IO.Compression;
 BinaryReader br = new(File.OpenRead(args[0]));
 Directory.CreateDirectory(Path.GetDirectoryName(args[0]) + "\\" + Path.GetFileNameWithoutExtension(args[0]));
 int version = br.ReadInt32();
-br.Readbyte();
-br.Readbyte();
-br.Readbyte();
+br.ReadByte();
+br.ReadByte();
+br.ReadByte();
 int fileCount = br.ReadInt32();
 for (int i = 0; i < fileCount; i++)
 {
@@ -19,12 +19,12 @@ for (int i = 0; i < fileCount; i++)
     if (sizeUncompressed == -1)
     {
         BinaryWriter bw = new(FS);
-        bw.Write(br.ReadBytes(size));
+        bw.Write(br.ReadBytes(sizeCompressed));
     }
     else
     {
         br.ReadInt16();
-        using (var ds = new DeflateStream(new MemoryStream(br.ReadBytes(size - 2)), CompressionMode.Decompress))
+        using (var ds = new DeflateStream(new MemoryStream(br.ReadBytes(sizeCompressed - 2)), CompressionMode.Decompress))
             ds.CopyTo(FS);
     }
 
